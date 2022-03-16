@@ -13,14 +13,14 @@ const (
 const (
 	DefaultCoreSize = 10
 	DefaultCapacity = 100
-	LayoffsTime = time.Second * 2
+	LayoffsTime     = time.Second * 2
 )
 
 type Pool struct {
 	status int32
 
-	core int32
-	capacity int32
+	core          int32
+	capacity      int32
 	runningWorker int32
 
 	workers chan *Worker
@@ -43,10 +43,10 @@ func NewPool(core, capacity int32) *Pool {
 		core = capacity
 	}
 	p := &Pool{
-		core: core,
+		core:     core,
 		capacity: capacity,
-		workers: make(chan *Worker, capacity),
-		status: Working,
+		workers:  make(chan *Worker, capacity),
+		status:   Working,
 		lockChan: make(chan struct{}, 1),
 	}
 	go p.winterComing()
@@ -57,15 +57,15 @@ func (p *Pool) Running() int32 {
 	return atomic.LoadInt32(&p.runningWorker)
 }
 
-func (p *Pool) lock()  {
+func (p *Pool) lock() {
 	p.lockChan <- struct{}{}
 }
 
 func (p *Pool) unlock() {
-	<- p.lockChan
+	<-p.lockChan
 }
 
-func (p *Pool) setPoolStatus(status int32)  {
+func (p *Pool) setPoolStatus(status int32) {
 	atomic.StoreInt32(&p.status, status)
 }
 
@@ -91,7 +91,7 @@ func (p *Pool) retrieveWorker() *Worker {
 	for {
 		p.lock()
 		select {
-		case worker, ok := <- p.workers:
+		case worker, ok := <-p.workers:
 			p.unlock()
 			if !ok {
 				p.setPoolStatus(Closed)
@@ -107,7 +107,7 @@ func (p *Pool) retrieveWorker() *Worker {
 	}
 }
 
-func (p *Pool) revertWorker(worker *Worker)  {
+func (p *Pool) revertWorker(worker *Worker) {
 	if p.getPoolStatus() == Closed {
 		return
 	}
@@ -143,7 +143,3 @@ func (p *Pool) winterComing() {
 		}
 	}
 }
-
-
-
-

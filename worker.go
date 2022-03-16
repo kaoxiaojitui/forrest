@@ -7,21 +7,21 @@ import (
 )
 
 type Worker struct {
-	taskChan chan func()
-	pool *Pool
+	taskChan      chan func()
+	pool          *Pool
 	touchFishTime time.Time
 }
 
 func NewWorker(taskChan chan func(), pool *Pool) *Worker {
 	w := &Worker{
 		taskChan: taskChan,
-		pool: pool,
+		pool:     pool,
 	}
 	w.run()
 	return w
 }
 
-func (w *Worker) run()  {
+func (w *Worker) run() {
 	go func() {
 		atomic.AddInt32(&w.pool.runningWorker, 1)
 		defer func() {

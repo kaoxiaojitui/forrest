@@ -21,6 +21,7 @@ func demoFunc() {
 	fmt.Println("Hello World!")
 }
 
+// copy from ants test case
 func main() {
 	runTimes := 1000
 
