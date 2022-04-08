@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"forrest"
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"github.com/kaoxiaojitui/forrest"
 )
 
 var sum int32
